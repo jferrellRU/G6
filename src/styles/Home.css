@@ -56,23 +56,24 @@ header .subtitle {
 }
 
 .product {
-  flex: 1 1 calc(25% - 20px); /* 4 items per row */
-  max-width: 280px; /* Prevent items from being too large */
-  min-width: 200px; /* Prevent items from shrinking too much */
+  flex: 1 1 calc(25% - 20px); /* Adjust the width as needed */
+  max-width: 200px; /* Increase max width */
+  min-width: 150px; /* Increase min width */
+  height: 300px; /* Increase height of the product box */
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px;
   text-align: center;
   box-sizing: border-box;
-  background: #fff; /* White background for better readability */
-  overflow: hidden; /* Ensure content does not overflow */
+  background: #fff;
+  overflow: hidden;
   position: relative;
 }
 
 .product img {
-  width: 100%; /* Ensure image fits within the card */
-  height: 180px;
-  object-fit: cover;
+  width: 100%; /* Ensure the image fits within the box */
+  height: 300px; /* Increase height to fit the box */
+  object-fit: contain; /* Ensure the entire image is visible */
   border-radius: 8px;
 }
 

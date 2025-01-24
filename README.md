@@ -7,6 +7,12 @@ Non-registered users will be able to access all of the basic features of the web
 Registered users can save their credit card information, home address, access discounts, and will be able to view their previous purchases. Registered users will also have the ability to place product reviews on product pages and these reviews will be saved in the database to be viewed by all who visit the product site. Moreover, registered users will be able to have their shopping cart data saved from previous sessions if website cache is cleared.
 
 
+![Home Image](./assets/DizzyDesignHome.png) 
+
+![Search Image](./assets/DizzyDesignSearch.png)
+
+
+
 ## Installation
 
 1. Clone the repository:
