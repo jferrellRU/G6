@@ -1,0 +1,128 @@
+/* General styles for the review form */
+body {
+    font-family: "Inter", sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  
+  /* Review form container */
+  .review-form-container {
+    width: 95%;
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 20px 30px 30px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header */
+  .review-form-container h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #111;
+    margin-bottom: 20px;
+  }
+  
+  /* Form labels */
+  form label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 600;
+  }
+  
+  /* Input fields */
+  form input[type="number"],
+  form textarea {
+    width: 100%;
+    padding: 2px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  /* Focus effect for inputs */
+  form input[type="number"]:focus,
+  form textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 4px rgba(37, 99, 235, 0.3);
+  }
+  
+  /* Textarea specific */
+  form textarea {
+    resize: none;
+    height: 100px;
+  }
+  
+  /* Submit button */
+  form button {
+    width: 100%;
+    max-height: 50px;
+    background-color: #2563eb;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  }
+  
+  form button:hover {
+    background-color: #1e4ed8;
+    transform: scale(1.02);
+  }
+  
+  form button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Message box */
+  .message {
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  /* Success message */
+  .message-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+  }
+  
+  /* Error message */
+  .message-error {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .review-form-container {
+      padding: 15px 20px;
+    }
+  
+    form input[type="number"],
+    form textarea {
+      padding: 10px;
+    }
+  
+    form button {
+      font-size: 0.9rem;
+      padding: 10px;
+    }
+  }

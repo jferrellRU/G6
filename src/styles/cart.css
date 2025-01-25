@@ -26,9 +26,11 @@ body {
   /* Cart Items Grid */
   .cart-items {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, max-content)); /* Ensures items take up only necessary space */
     gap: 20px;
+    justify-content: center; /* Centers the grid items horizontally */
     justify-items: center;
+    align-items: center;
     margin-top: 20px; /* Adds space between the heading and the grid */
   }
   
@@ -45,6 +47,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 3%;
   }
   
   .cart-item-image {
@@ -117,6 +120,13 @@ body {
   footer p {
     font-size: 14px;
     color: #666;
+  }
+
+  .error-message {
+    color: #dc3545; /* Match the remove button’s red color */
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0;
   }
   
   /* Responsive Design */

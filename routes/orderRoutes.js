@@ -13,6 +13,7 @@ router.post('/add-product-to-cart', orderHandler.addProductAsOrder);
 router.delete('/:id/remove', orderHandler.deleteOrder);
 router.put('/:id/complete', orderHandler.completeSpecificOrder);
 router.put('/:id/cancel', orderHandler.cancelOrder);
+router.put('/:id/increase-quantity', orderHandler.increaseCartQuantity);
 
 
 module.exports = router;

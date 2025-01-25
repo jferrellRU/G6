@@ -15,6 +15,7 @@ const Cart = () => {
       try {
         // Fetch all orders with status 'in_cart'
         const response = await fetch("/orders?status=in_cart");
+        console.log(response, "response")
         if (!response.ok) {
           console.error("Failed to fetch cart items:", response.statusText);
           setError("Failed to load cart items. Please try again.");
@@ -97,7 +98,7 @@ const Cart = () => {
           {error && <p className="error-message">{error}</p>}
           {cartItems.length > 0 ? (
             cartItems.map((item) => (
-              <div key={item._id} className="product">
+              <div key={item._id} className="cart-item-card">
                 <img
                   src={item.imageUrl || "https://via.placeholder.com/150"}
                   alt={item.productName || "Product"}
