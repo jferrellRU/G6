@@ -67,6 +67,27 @@ const addProductAsOrder = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+const increaseCartQuantity = async (req, res) => {
+    const { id } = req.params;
+    const { quantity } = req.body;
+    let newQuantity = quantity + 1;
+
+    try {
+        const thisOrder = await Order.findById(id);
+        const price = thisOrder.total_price * newQuantity;
+        const order = await Order.findOneAndUpdate({ _id: id }, { quantity: newQuantity, total_price: price }, { new: true });
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
+
 const deleteOrder = (req, res) => {
     handleResponse(res, Order.findByIdAndDelete(req.params.id));
 };
@@ -105,4 +126,5 @@ module.exports = {
     addProductAsOrder,
     deleteOrder,
     completeSpecificOrder,
+    increaseCartQuantity
 };

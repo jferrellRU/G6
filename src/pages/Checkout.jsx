@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // React Router hook
-import '../styles/checkout.css';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // React Router hook
+import "../styles/checkout.css";
+import axios from "axios";
 
 const Checkout = () => {
   const [orders, setOrders] = useState([]);
@@ -9,18 +9,17 @@ const Checkout = () => {
   const [alerts, setAlerts] = useState("");
   const navigate = useNavigate(); // Initialize navigation
 
+  // Fetch orders and PayPal config on component mount
   useEffect(() => {
-    
     const fetchOrdersWithImages = async () => {
       try {
-        const response = await axios.get('/orders');
-        console.log('Fetched Orders:', response.data);
+        const response = await axios.get("/orders");
+        console.log("Fetched Orders:", response.data);
         setOrders(response.data); // Set the orders state
         calculateTotal(response.data);
-        const ordersData = response.data;
 
         const ordersWithImages = await Promise.all(
-          ordersData.map(async (order) => {
+          response.data.map(async (order) => {
             if (order.productID) {
               try {
                 const productResponse = await axios.get(`/products/${order.productID}`);
@@ -41,120 +40,131 @@ const Checkout = () => {
         setOrders(ordersWithImages);
         calculateTotal(ordersWithImages);
       } catch (error) {
-        console.error('Error fetching orders:', error);
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    const fetchPayPalConfig = async () => {
+      try {
+        const response = await axios.get("/paypal/config");
+        await loadPayPalSdk(response.data.clientId, response.data.currency, response.data.intent);
+      } catch (error) {
+        console.error("Error fetching PayPal config:", error);
       }
     };
 
     fetchOrdersWithImages();
-
-    axios.get('/paypal/config')
-      .then(response => {
-        loadPayPalSdk(response.data.clientId, response.data.currency, response.data.intent)
-          .then(() => {
-            renderPayPalButtons(response.data.intent);
-          })
-          .catch(error => console.error('Error loading PayPal SDK:', error));
-      })
-      .catch(error => console.error('Error fetching PayPal config:', error));
+    fetchPayPalConfig();
   }, []);
 
+  // Render PayPal buttons once orders are available
   useEffect(() => {
     if (orders.length > 0) {
-        console.log('Rendering PayPal Buttons - Orders:', orders);
-        renderPayPalButtons(); // Render PayPal buttons after orders are fetched
+      console.log("Rendering PayPal Buttons - Orders:", orders);
+      renderPayPalButtons();
     }
   }, [orders]);
 
+  // Calculate total price of orders in cart
   const calculateTotal = (orders) => {
     const total = orders
-      .filter(order => order.status === 'in_cart')
+      .filter((order) => order.status === "in_cart")
       .reduce((sum, order) => sum + order.total_price, 0);
     setTotalPrice(total);
   };
 
+
+
+  // Load PayPal SDK dynamically
   const loadPayPalSdk = (clientId, currency, intent) => {
     return new Promise((resolve, reject) => {
-      if (document.getElementById('paypal-sdk')) {
+      if (document.getElementById("paypal-sdk")) {
         resolve();
         return;
       }
 
-      const script = document.createElement('script');
-      script.id = 'paypal-sdk';
+      const script = document.createElement("script");
+      script.id = "paypal-sdk";
       script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}&intent=${intent}`;
       script.onload = () => resolve();
-      script.onerror = () => reject('Error loading PayPal SDK.');
+      script.onerror = () => reject("Error loading PayPal SDK.");
       document.head.appendChild(script);
     });
   };
 
-  const renderPayPalButtons = (intent) => {
-    const container = document.getElementById('payment_options');
+  // Render PayPal buttons
+  const renderPayPalButtons = () => {
+    const container = document.getElementById("payment_options");
     if (!container) return;
 
-    container.innerHTML = '';
-    console.log('Orders State Before PayPal:', orders); 
+    if (!window.paypal || !window.paypal.Buttons) {
+      console.error("PayPal SDK is not loaded.");
+      setAlerts("An error occurred while loading PayPal buttons. Please refresh the page.");
+      return;
+    }
 
-    window.paypal.Buttons({
-      onClick: () => console.log('PayPal button clicked'),
-      style: {
-        shape: 'rect',
-        color: 'gold',
-        layout: 'vertical',
-        label: 'paypal',
-      },
-      createOrder: () => {
-        const intent = 'CAPTURE'; // Define the intent locally
-        console.log('Intent being sent to backend:', intent);
-        return axios.post('/paypal/create_order', { intent })
-          .then(response => response.data.id)
-          .catch(error => {
-            throw error;
-          });
-      },
-      onApprove: () => {
-        // Find all orders in the cart
-        console.log('onApprove triggered'); // Basic log
-        const inCartOrders = orders.filter(order => order.status === 'in_cart');
-        console.log('Orders in Cart:', inCartOrders);
-    
-        // Update the status of each order to 'completed'
-        Promise.all(
-            inCartOrders.map(order =>
-                axios.put(`/orders/${order._id}/complete`) // Call the backend route for each order
-                .then(response => console.log('Order Updated:', response.data)) // Log each response
+    container.innerHTML = ""; // Clear the container
+    console.log("Orders State Before PayPal:", orders);
 
-            )
-        )
-            .then(() => {
-                console.log('All orders marked as completed.');
-                setAlerts('Thank you for your payment! Your order has been completed successfully.');
-    
-                // Update the state directly to avoid refetching
-                const updatedOrders = orders.map(order =>
-                    order.status === 'in_cart' ? { ...order, status: 'completed' } : order
-                );
-                setOrders(updatedOrders);
-            })
-            .catch(error => {
-                console.error('Error completing orders:', error);
-                setAlerts('An error occurred while updating your order. Please try again.');
+    window.paypal
+      .Buttons({
+        style: {
+          shape: "rect",
+          color: "gold",
+          layout: "vertical",
+          label: "paypal",
+        },
+        createOrder: () => {
+          console.log("Creating PayPal order...");
+          return axios
+            .post("/paypal/create_order", { intent: "CAPTURE" })
+            .then((response) => response.data.id)
+            .catch((error) => {
+              console.error("Error creating PayPal order:", error);
+              throw error;
             });
-    },
-    
-      onCancel: () => setAlerts("Order cancelled!"),
-      onError: () => setAlerts("An error occurred with PayPal."),
-    }).render('#payment_options');
+        },
+        onApprove: () => {
+          console.log("PayPal order approved.");
+          const inCartOrders = orders.filter((order) => order.status === "in_cart");
+          console.log("Orders in Cart:", inCartOrders);
+
+          Promise.all(
+            inCartOrders.map((order) =>
+              axios.put(`/orders/${order._id}/complete`).then((response) =>
+                console.log("Order Updated:", response.data)
+              )
+            )
+          )
+            .then(() => {
+              console.log("All orders marked as completed.");
+              setAlerts("Thank you for your payment! Your order has been completed successfully.");
+
+              // Update state directly
+              const updatedOrders = orders.map((order) =>
+                order.status === "in_cart" ? { ...order, status: "completed" } : order
+              );
+              setOrders(updatedOrders);
+            })
+            .catch((error) => {
+              console.error("Error completing orders:", error);
+              setAlerts("An error occurred while updating your order. Please try again.");
+            });
+        },
+        onCancel: () => setAlerts("Order cancelled!"),
+        onError: (err) => {
+          console.error("PayPal error:", err);
+          setAlerts("An error occurred with PayPal. Please try again.");
+        },
+      })
+      .render("#payment_options");
   };
 
   return (
     <div className="checkout-container">
       <div className="checkout-content">
         <div className="left-section">
-          <button
-            className="back-button"
-            onClick={() => navigate('/')} // Navigate to root
-          >
+          <button className="back-button" onClick={() => navigate("/")}>
             Back to Home
           </button>
           <div className="checkout-summary">
@@ -166,21 +176,22 @@ const Checkout = () => {
         <div className="right-section">
           <div className="orders-section">
             <h2>Your Orders</h2>
-            {orders.filter(order => order.status === 'in_cart').map((order, index) => (
-              <div className="order-item" key={index}>
-                {order.imageUrl && (
-                  <img
-                    src={order.imageUrl}
-                    alt={`Order ${order._id}`}
-                    className="order-item-image"
-                  />
-                )}
-                <h4>Order #{order._id}</h4>
-                <p>Quantity: {order.quantity}</p>
-                <p>Total Price: ${order.total_price}</p>
-                <p>Status: {order.status}</p>
-              </div>
-            ))}
+            {orders
+              .filter((order) => order.status === "in_cart")
+              .map((order, index) => (
+                <div className="order-item" key={index}>
+                  {order.imageUrl && (
+                    <img
+                      src={order.imageUrl}
+                      alt={`Order ${order._id}`}
+                      className="order-item-image"
+                    />
+                  )}
+                  <h4>{order.productName}</h4>
+                  <p>Quantity: {order.quantity}</p>
+                  <p>Total Price: ${order.total_price}</p>
+                </div>
+              ))}
           </div>
         </div>
       </div>

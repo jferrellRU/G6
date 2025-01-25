@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/review.css";
 
 const AddReview = ({ productId, userId, userName, productName }) => {
     const [reviewData, setReviewData] = useState({

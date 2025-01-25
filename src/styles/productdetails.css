@@ -1,0 +1,158 @@
+/* -------------------- Base & Body -------------------- */
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f4f5;
+  color: #333;
+}
+
+/* Container for the entire product page */
+.product-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* -------------------- Header -------------------- */
+header {
+  margin-bottom: 40px;
+}
+
+/* -------------------- Product Details Section -------------------- */
+.product-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 4rem; /* Increased padding around the edges */
+}
+
+.product-image {
+  flex: 1 1 300px; /* grows/shrinks, with a min width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-detail-image {
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.product-info {
+  flex: 1 1 400px; /* grows/shrinks, with a min width */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Product Title */
+.product-info h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #111;
+  display: flex;
+}
+
+/* Description */
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+/* Price and Stock */
+.price,
+.stock {
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* Add to cart button */
+.add-to-cart-button {
+  background-color: #2563eb; /* modern blue shade */
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  width: fit-content;
+  justify-content: center;
+  text-align: center;
+}
+
+.add-to-cart-button:hover {
+  background-color: #1e4ed8;
+}
+
+/* Cart message text */
+.cart-message {
+  margin-top: 1rem;
+  color: #0f5132;
+  background-color: #d1e7dd;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* -------------------- Reviews Section -------------------- */
+h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.reviews-section {
+  margin-bottom: 2rem;
+}
+
+.review-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
+}
+
+.review-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #111;
+}
+
+.review-card p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* -------------------- Responsiveness -------------------- */
+@media (max-width: 768px) {
+  .product-details {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .product-image {
+    margin-bottom: 1.5rem;
+  }
+
+  .add-to-cart-button {
+    width: 100%;
+  }
+}
