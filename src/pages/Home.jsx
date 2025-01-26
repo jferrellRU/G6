@@ -73,26 +73,22 @@ const Home = () => {
       <section id="products">
         <h2>Featured Products</h2>
         <div className="product-grid">
-          {products.length > 0 ? (
-            products.map((product) =>
-              product._id ? ( // Ensure _id exists before rendering
-                <div key={product._id} className="product">
-                  <Link to={`/product-details/${product._id}`}>
-                    {product.imageUrl && (
-                      <img
-                        src={product.imageUrl} // Base64 string or full URL for the image
-                        alt={product.name}
-                        className="product-image"
-                      />
-                    )}
-                    <h3>{product.name}</h3>
-                    <p>${product.price}</p>
-                  </Link>
-                </div>
-              ) : null // Skip rendering if _id is missing
-            )
-          ) : (
-            <p>Loading products...</p>
+          {products.map((product) =>
+            product._id ? ( // Ensure _id exists before rendering
+              <div key={product._id} className="product">
+                <Link to={`/product-details/${product._id}`}>
+                  {product.imageUrl && (
+                    <img
+                      src={product.imageUrl} // Base64 string or full URL for the image
+                      alt={product.name}
+                      className="product-image"
+                    />
+                  )}
+                  <h3>{product.name}</h3>
+                  <p>${product.price}</p>
+                </Link>
+              </div>
+            ) : null // Skip rendering if _id is missing
           )}
         </div>
       </section>
