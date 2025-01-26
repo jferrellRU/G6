@@ -129,8 +129,7 @@ const OrdersHistory = () => {
                         <p>Loading orders...</p>
                     ) : orders.length > 0 ? (
                         orders.map((order) => (
-                            <div key={order._id} className="product">
-                                {/* Dynamically fetched image */}
+                            <div key={order._id} className="order-card">
                                 <img
                                     src={order.imageURL || "/assets/placeholder.png"}
                                     alt={order.productName}
