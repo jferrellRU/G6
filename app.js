@@ -55,6 +55,14 @@ app.use((req, res) => {
     res.status(404).json({ error: 'API route not found' });
 });
 
+app.use(
+    '/assets',
+    express.static('assets', {
+      maxAge: '1y', // Cache for 1 year
+      immutable: true, // Assets won't change
+    })
+  );
+
 // Start the Server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Header from "../components/Header";
-import axios from 'axios';
-import '../styles/userprofile.css';
-
+import axios from "axios";
+import "../styles/userprofile.css";
 
 const UserProfile = () => {
   const [authenticated, setAuthenticated] = useState(null); // Track auth state
@@ -123,12 +122,10 @@ const UserProfile = () => {
     }
   };
 
-
   const handleMakeAdmin = async () => {
-    try {  
-        const username = user._id;
-        console.log(username);
-
+    try {
+      const username = user._id;
+      console.log(username);
 
       const response = await fetch("/users/is-admin", {
         method: "POST",
@@ -136,7 +133,7 @@ const UserProfile = () => {
         body: JSON.stringify({
           userId: username, // Use the current user's ID
           adminPassword, // Admin password entered by the user
-        })
+        }),
       });
 
       const data = await response.json();
@@ -152,97 +149,108 @@ const UserProfile = () => {
     }
   };
 
-  if (authenticated === null) {
-    return <div>Loading...</div>; // Show loading state while authenticating
-  }
 
   return (
     <div className="profile">
-      <header>
+      <header className="header">
         <Header />
       </header>
-      <h1>Profile</h1>
-      {feedback && <div className="feedback">{feedback}</div>}
-      {user && (
-        <div>
-          <p>Welcome, {user.name || "User"}!</p>
-          <p>Email: {user.email}</p>
-        </div>
-      )}
 
-      {/* Display user's reviews */}
-      <h2>Your Reviews</h2>
-      {userReviews.length > 0 ? (
-        userReviews.map((review) => (
-          <div key={review._id} className="review">
-            <h3>Product: {review.productName}</h3>
-            <p>
-              Rating: {editingReview === review._id ? (
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={updatedRating}
-                  onChange={(e) => setUpdatedRating(Number(e.target.value))}
-                />
-              ) : (
-                `${review.rating}/5`
-              )}
-            </p>
-            {editingReview === review._id ? (
-              <div>
-                <textarea
-                  value={updatedComment}
-                  onChange={(e) => setUpdatedComment(e.target.value)}
-                  placeholder="Update your review"
-                />
-                <button onClick={() => handleUpdateReview(review._id)}>
-                  Save
-                </button>
-                <button onClick={() => setEditingReview(null)}>Cancel</button>
-              </div>
-            ) : (
-              <p>{review.comment}</p>
-            )}
+      <div className="profile-review-container">
+        {/* Profile Section */}
+        <div className="profile-container">
+          <h1 className="profile-title">Profile</h1>
+          {feedback && <div className="feedback">{feedback}</div>}
+          {user && (
+            <div className="user-info">
+              <p>Welcome, {user.name || "User"}!</p>
+              <p>Email: {user.email}</p>
+            </div>
+          )}
+          <div className="admin-container">
+            <label>
+              Enter Admin Password:
+              <input
+                type="password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+              />
+            </label>
+          </div>
+          {/* buttons */}
+          <button onClick={handleMakeAdmin}>Make Admin</button>
+          <div className="change-password-container">
             <button
-              onClick={() => {
-                setEditingReview(review._id);
-                setUpdatedComment(review.comment);
-                setUpdatedRating(review.rating);
-              }}
+              onClick={() => navigate("/forgot-password")}
+              className="change-password-button"
             >
-              Edit Review
-            </button>
-            <button onClick={() => handleDeleteReview(review._id)}>
-              Delete Review
+              Change User Password
             </button>
           </div>
-        ))
-      ) : (
-        <p>You haven't reviewed any products yet.</p>
-      )}
+          <button className="logout-button" onClick={handleLogout}>
+            Log Out
+          </button>
+        </div>
 
-      {/* Link to change password */}
-      <div>
-        <p>
-        <Link to={`/forgot-password/`}>Change Password</Link>
-        </p>
+        {/* Reviews Section */}
+        <div className="reviews-container">
+          <h2 className="reviews-title">Your Reviews</h2>
+          {userReviews.length > 0 ? (
+            userReviews.map((review) => (
+              <div key={review._id} className="review">
+                <h3 className="product-name">Product: {review.productName}</h3>
+                <p className="rating">
+                  Rating:{" "}
+                  {editingReview === review._id ? (
+                    <input
+                      type="number"
+                      min="1"
+                      max="5"
+                      className="rating-input"
+                      value={updatedRating}
+                      onChange={(e) => setUpdatedRating(Number(e.target.value))}
+                    />
+                  ) : (
+                    `${review.rating}/5`
+                  )}
+                </p>
+                {editingReview === review._id ? (
+                  <div className="edit-review">
+                    <textarea
+                      value={updatedComment}
+                      onChange={(e) => setUpdatedComment(e.target.value)}
+                      placeholder="Update your review"
+                      className="comment-input"
+                    />
+                    <button className="save-button" onClick={() => {}}>
+                      Save
+                    </button>
+                    <button className="cancel-button" onClick={() => {}}>
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <p className="comment">{review.comment}</p>
+                )}
+                <button
+                  className="edit-button"
+                  onClick={() => setEditingReview(review._id)}
+                >
+                  Edit Review
+                </button>
+                <button
+                  className="delete-button"
+                  onClick={() => {}}
+                >
+                  Delete Review
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="no-reviews">You haven't reviewed any products yet.</p>
+          )}
+        </div>
       </div>
-
-      {/* Admin password input */}
-      <div>
-        <label>
-          Enter Admin Password:
-          <input
-            type="password"
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-          />
-        </label>
-        <button onClick={handleMakeAdmin}>Make Admin</button>
-      </div>
-
-      <button onClick={handleLogout}>Log Out</button>
     </div>
   );
 };
